@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="SKINS GAME FRIDAY NIGHT">
+  <defs>
+    <!-- Left-to-right over the top (sweep 1) and under the bottom (sweep 0),
+         so both bands of lockup text sit upright. -->
+    <path id="arcTop" d="M28,120 A92,92 0 0 1 212,120" fill="none"/>
+    <path id="arcBottom" d="M34,120 A86,86 0 0 0 206,120" fill="none"/>
+    <radialGradient id="glow" cx="50%" cy="38%" r="62%">
+      <stop offset="0%" stop-color="#2a2a2a"/>
+      <stop offset="100%" stop-color="#0b0b0b"/>
+    </radialGradient>
+  </defs>
+
+  <circle cx="120" cy="120" r="118" fill="url(#glow)"/>
+  <circle cx="120" cy="120" r="115" fill="none" stroke="#c9a227" stroke-width="5"/>
+  <circle cx="120" cy="120" r="76" fill="none" stroke="#ffffff" stroke-width="1.5" opacity=".22"/>
+
+  
+    <circle cx="120" cy="114" r="32" fill="#ffffff"/>
+    <g fill="#0d0d0d" opacity=".28">
+      <circle cx="108" cy="102" r="3.2"/><circle cx="120" cy="98" r="3.2"/><circle cx="132" cy="102" r="3.2"/>
+      <circle cx="104" cy="114" r="3.2"/><circle cx="120" cy="112" r="3.2"/><circle cx="136" cy="114" r="3.2"/>
+      <circle cx="108" cy="126" r="3.2"/><circle cx="120" cy="126" r="3.2"/><circle cx="132" cy="126" r="3.2"/>
+    </g>
+    <path d="M96 152h48" stroke="#c9a227" stroke-width="6" stroke-linecap="round"/>
+
+  <g font-family="'Oswald','Arial Narrow',Arial,sans-serif" font-weight="600" fill="#ffffff">
+    <text font-size="19" letter-spacing="4" text-anchor="middle">
+      <textPath href="#arcTop" startOffset="50%">SKINS GAME</textPath>
+    </text>
+    <text font-size="13" letter-spacing="3" text-anchor="middle" opacity=".7">
+      <textPath href="#arcBottom" startOffset="50%">FRIDAY NIGHT</textPath>
+    </text>
+  </g>
+
+  <g fill="#c9a227">
+    <path d="M22 120l7-7 7 7-7 7z"/>
+    <path d="M204 120l7-7 7 7-7 7z"/>
+  </g>
+</svg>

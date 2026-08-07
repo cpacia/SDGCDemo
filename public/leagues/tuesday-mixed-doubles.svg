@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="MIXED DOUBLES TUESDAY LEAGUE">
+  <defs>
+    <!-- Left-to-right over the top (sweep 1) and under the bottom (sweep 0),
+         so both bands of lockup text sit upright. -->
+    <path id="arcTop" d="M28,120 A92,92 0 0 1 212,120" fill="none"/>
+    <path id="arcBottom" d="M34,120 A86,86 0 0 0 206,120" fill="none"/>
+    <radialGradient id="glow" cx="50%" cy="38%" r="62%">
+      <stop offset="0%" stop-color="#2a2a2a"/>
+      <stop offset="100%" stop-color="#0b0b0b"/>
+    </radialGradient>
+  </defs>
+
+  <circle cx="120" cy="120" r="118" fill="url(#glow)"/>
+  <circle cx="120" cy="120" r="115" fill="none" stroke="#7cda24" stroke-width="5"/>
+  <circle cx="120" cy="120" r="76" fill="none" stroke="#ffffff" stroke-width="1.5" opacity=".22"/>
+
+  
+    <path d="M92 84l26 56" stroke="#ffffff" stroke-width="7" stroke-linecap="round"/>
+    <path d="M148 84l-26 56" stroke="#ffffff" stroke-width="7" stroke-linecap="round"/>
+    <path d="M114 140h14l6 14h-26z" fill="#7cda24"/>
+    <circle cx="120" cy="76" r="9" fill="#7cda24"/>
+
+  <g font-family="'Oswald','Arial Narrow',Arial,sans-serif" font-weight="600" fill="#ffffff">
+    <text font-size="19" letter-spacing="4" text-anchor="middle">
+      <textPath href="#arcTop" startOffset="50%">MIXED DOUBLES</textPath>
+    </text>
+    <text font-size="13" letter-spacing="3" text-anchor="middle" opacity=".7">
+      <textPath href="#arcBottom" startOffset="50%">TUESDAY LEAGUE</textPath>
+    </text>
+  </g>
+
+  <g fill="#7cda24">
+    <path d="M22 120l7-7 7 7-7 7z"/>
+    <path d="M204 120l7-7 7 7-7 7z"/>
+  </g>
+</svg>

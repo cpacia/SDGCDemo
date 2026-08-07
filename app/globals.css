@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Brand tokens lifted from sethdichardgolf.com (Divi theme builder header/footer)
+   --------------------------------------------------------------------------- */
+:root {
+  --sdgc-red: #e02b2b;
+  --sdgc-red-deep: #661414;
+  --sdgc-green: #7cda24;
+  --sdgc-link: #2ea3f2;
+  --sdgc-ink: #333333;
+  --sdgc-body: #666666;
+
+  /* Set at runtime by <SiteHeader> so the fixed-header offset always matches. */
+  --sdgc-header-h: 132px;
+}
+
+@theme inline {
+  --color-sdgc-red: var(--sdgc-red);
+  --color-sdgc-red-deep: var(--sdgc-red-deep);
+  --color-sdgc-green: var(--sdgc-green);
+  --color-sdgc-link: var(--sdgc-link);
+  --color-sdgc-ink: var(--sdgc-ink);
+  --color-sdgc-body: var(--sdgc-body);
+
+  --font-display: var(--font-oswald);
+  --font-sans: var(--font-poppins);
+  --font-body: var(--font-open-sans);
+}
+
+/* Divi base typography — body copy on the client site is Open Sans 14/1.7 #666 */
+body {
+  font-family: var(--font-open-sans), Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  line-height: 1.7em;
+  font-weight: 500;
+  color: var(--sdgc-body);
+  background: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* "Book Now" wiggle — the client's .rmg-wiggle keyframes, verbatim timings. */
+@keyframes sdgc-wiggle {
+  2% { transform: translateX(3px) rotate(2deg); }
+  4% { transform: translateX(-3px) rotate(-2deg); }
+  6% { transform: translateX(3px) rotate(2deg); }
+  8% { transform: translateX(-3px) rotate(-2deg); }
+  10% { transform: translateX(2px) rotate(1deg); }
+  12% { transform: translateX(-2px) rotate(-1deg); }
+  14% { transform: translateX(2px) rotate(1deg); }
+  16% { transform: translateX(-2px) rotate(-1deg); }
+  18% { transform: translateX(1px) rotate(0); }
+  20% { transform: translateX(-1px) rotate(0); }
+}
+
+.sdgc-wiggle {
+  animation: sdgc-wiggle 5s linear infinite;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sdgc-wiggle {
+    animation: none;
+  }
+}
+
+/* Front9 embed.js injects a full-width iframe that self-reports its height. */
+.f9-embed iframe {
+  width: 100%;
+  border: 0;
+  display: block;
+  overflow: hidden;
+}
