@@ -25,7 +25,9 @@ function ArrowIcon() {
 
 function PanelHeader({ title, subtitle }: { title: string; subtitle: string }) {
   return (
-    <div className="flex flex-wrap items-end justify-between gap-3 border-b border-black/10 px-6 py-5 sm:px-8">
+    // Painted above the widget (and opaque) so the rule under it survives the
+    // negative margin that tucks the widget's blank top edge underneath.
+    <div className="relative z-10 flex flex-wrap items-end justify-between gap-3 border-b border-black/10 bg-white px-6 py-5 sm:px-8">
       <div>
         <h3 className="font-display text-[24px] leading-none font-bold tracking-[0.05em] text-sdgc-ink uppercase">
           {title}
@@ -224,14 +226,14 @@ export default async function Home() {
           <div className="mt-14 grid grid-cols-1 gap-8 xl:grid-cols-2">
             <div className="overflow-hidden rounded-sm border border-black/10 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
               <PanelHeader title="From the Blog" subtitle="News, recaps, and tips from our staff" />
-              <div className="p-2 sm:p-4">
+              <div className="-mt-4 px-2 pb-2 sm:px-4 sm:pb-4">
                 <Front9Embed
                   org="seth-dichard-golf-centers"
                   widget="blog-feed"
                   options={{
                     preset: "featured-sidebar",
                     posts: "15",
-                    link: "http://localhost:3001/blog?id={slug}",
+                    link: "http://localhost:3000/blog?id={slug}",
                   }}
                 />
               </div>
@@ -242,7 +244,7 @@ export default async function Home() {
                 title="Tournament Schedule"
                 subtitle="Open events — no league membership required"
               />
-              <div className="p-2 sm:p-4">
+              <div className="-mt-4 px-2 pb-2 sm:px-4 sm:pb-4">
                 <Front9Embed
                   org="seth-dichard-golf-centers"
                   widget="schedule"
@@ -252,7 +254,7 @@ export default async function Home() {
                     tags: "tournaments",
                     actions: "1",
                     accent: "#e11414",
-                    link: "http://localhost:3001/event?id={slug}",
+                    link: "http://localhost:3000/event?id={slug}",
                   }}
                 />
               </div>

@@ -49,7 +49,9 @@ function Panel({
 }) {
   return (
     <div className="overflow-hidden rounded-sm border border-black/10 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
-      <div className="flex flex-wrap items-end justify-between gap-3 border-b border-black/10 px-6 py-5 sm:px-8">
+      {/* Painted above the widget (and opaque) so the rule under it survives the
+          negative margin that tucks the widget's blank top edge underneath. */}
+      <div className="relative z-10 flex flex-wrap items-end justify-between gap-3 border-b border-black/10 bg-white px-6 py-7 sm:px-8">
         <div>
           <h2 className="font-display text-[24px] leading-none font-bold tracking-[0.05em] text-sdgc-ink uppercase">
             {title}
@@ -60,7 +62,9 @@ function Panel({
           Powered by Front9
         </span>
       </div>
-      <div className="p-2 sm:p-4">{children}</div>
+      {/* No top padding, so -mt is measured from the header's edge rather than
+          spent cancelling it. */}
+      <div className="-mt-4 px-2 pb-2 sm:px-4 sm:pb-4">{children}</div>
     </div>
   );
 }
@@ -197,7 +201,7 @@ export default async function LeaguePage({ params }: PageProps<"/league/[slug]">
                       // Both widgets take the league itself; nothing here has to
                       // know an event tag or a standings-table id.
                       league: league.slug,
-                      link: "http://localhost:3001/event?id={slug}",
+                      link: "http://localhost:3000/event?id={slug}",
                     }}
                   />
                 </Panel>
