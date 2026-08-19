@@ -3,22 +3,31 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Front9Embed from "@/components/Front9Embed";
-import { LEAGUES } from "@/lib/leagues";
+import { fetchLeague, fetchLeagues, type League } from "@/lib/leagues";
 import { CONTACT } from "@/lib/nav";
 
-export function generateStaticParams() {
-  return LEAGUES.map((league) => ({ slug: league.slug }));
+export async function generateStaticParams() {
+  const leagues = await fetchLeagues();
+  return leagues.map((league) => ({ slug: league.slug }));
 }
 
 export async function generateMetadata({ params }: PageProps<"/league/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  const league = LEAGUES.find((l) => l.slug === slug);
+  const league = await fetchLeague(slug);
   if (!league) return { title: "League Not Found | Seth Dichard Golf Centers" };
 
   return {
     title: `${league.name} | Seth Dichard Golf Centers`,
     description: league.blurb,
   };
+}
+
+/** The header CTA reads back the league's registration state. */
+function registerLabel(league: League): string {
+  if (league.status === "completed") return "Season Complete";
+  if (league.status === "active") return "Season Underway — Ask About Next Season";
+  if (league.full) return "League Full — Join Waitlist";
+  return league.spotsOpen === null ? "Register Now" : `Register — ${league.spotsOpen} Spots Open`;
 }
 
 function ArrowLeftIcon() {
@@ -58,15 +67,15 @@ function Panel({
 
 export default async function LeaguePage({ params }: PageProps<"/league/[slug]">) {
   const { slug } = await params;
-  const league = LEAGUES.find((l) => l.slug === slug);
+  const league = await fetchLeague(slug);
   if (!league) notFound();
 
-  const full = league.spotsOpen === 0;
+  const closed = league.full || league.status !== "open";
   const facts = [
-    { label: "Plays", value: `${league.day}, ${league.time}` },
+    { label: "Plays", value: league.day },
     { label: "Format", value: league.format },
     { label: "Season", value: league.season },
-    { label: "Field", value: `${league.teams} teams` },
+    { label: "Entry", value: league.entryLabel },
   ];
 
   return (
@@ -126,13 +135,13 @@ export default async function LeaguePage({ params }: PageProps<"/league/[slug]">
             <a
               href={CONTACT.bookNow}
               className={`rounded-full px-8 py-3 font-sans text-[13px] font-bold tracking-[2px] uppercase transition-colors duration-300 ${
-                full
+                closed
                   ? "cursor-not-allowed bg-white/15 text-white/50"
                   : "bg-sdgc-red text-white hover:bg-[#c62222]"
               }`}
-              aria-disabled={full}
+              aria-disabled={closed}
             >
-              {full ? "League Full — Join Waitlist" : `Register — ${league.spotsOpen} Spots Open`}
+              {registerLabel(league)}
             </a>
             <a
               href={CONTACT.phoneHref}
@@ -173,33 +182,39 @@ export default async function LeaguePage({ params }: PageProps<"/league/[slug]">
       {/* ------------------------------------------------------------------ */}
       <section className="bg-[#f4f4f4] py-16 sm:py-20">
         <div className="mx-auto w-[85%] max-w-[1180px]">
-          {league.front9 ? (
+          {league.front9.hasSchedule || league.front9.hasStandings ? (
             <div className="grid grid-cols-1 gap-8 xl:grid-cols-2">
-              <Panel title="Schedule" subtitle="Every week of the season, with course and tee time">
-                <Front9Embed
-                  org={league.front9.org}
-                  widget="schedule"
-                  options={{
-                    title: " ",
-                    filter: "all",
-                    actions: "1",
-                    noregister: "1",
-                    tags: league.front9.scheduleTags,
-                    link: "http://localhost:3000/event?id={slug}",
-                  }}
-                />
-              </Panel>
+              {league.front9.hasSchedule && (
+                <Panel title="Schedule" subtitle="Every week of the season, with course and tee time">
+                  <Front9Embed
+                    org={league.front9.org}
+                    widget="schedule"
+                    options={{
+                      title: " ",
+                      filter: "all",
+                      actions: "1",
+                      noregister: "1",
+                      // Both widgets take the league itself; nothing here has to
+                      // know an event tag or a standings-table id.
+                      league: league.slug,
+                      link: "http://localhost:3001/event?id={slug}",
+                    }}
+                  />
+                </Panel>
+              )}
 
-              <Panel title="Standings" subtitle="Live season points, updated after every week">
-                <Front9Embed
-                  org={league.front9.org}
-                  widget="standings"
-                  options={{
-                    title: " ",
-                    series: league.front9.standingsSeries,
-                  }}
-                />
-              </Panel>
+              {league.front9.hasStandings && (
+                <Panel title="Standings" subtitle="Live season points, updated after every week">
+                  <Front9Embed
+                    org={league.front9.org}
+                    widget="standings"
+                    options={{
+                      title: " ",
+                      league: league.slug,
+                    }}
+                  />
+                </Panel>
+              )}
             </div>
           ) : (
             <div className="rounded-sm border border-dashed border-black/20 bg-white px-8 py-16 text-center">

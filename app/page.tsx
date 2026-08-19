@@ -3,15 +3,17 @@ import Link from "next/link";
 import Front9Embed from "@/components/Front9Embed";
 import LeagueCard from "@/components/LeagueCard";
 import SectionHeading from "@/components/SectionHeading";
-import { LEAGUES } from "@/lib/leagues";
+import { fetchLeagues } from "@/lib/leagues";
 import { RANKING_FACTS } from "@/lib/rankings";
 
-const STATS = [
-  { value: "8", label: "Active Leagues" },
-  { value: "140+", label: "Registered Players" },
-  { value: "6", label: "Simulator Bays" },
-  { value: "365", label: "Days a Year" },
-];
+function stats(leagueCount: number) {
+  return [
+    { value: String(leagueCount), label: leagueCount === 1 ? "Active League" : "Active Leagues" },
+    { value: "140+", label: "Registered Players" },
+    { value: "6", label: "Simulator Bays" },
+    { value: "365", label: "Days a Year" },
+  ];
+}
 
 function ArrowIcon() {
   return (
@@ -37,7 +39,11 @@ function PanelHeader({ title, subtitle }: { title: string; subtitle: string }) {
   );
 }
 
-export default function Home() {
+export default async function Home() {
+  /* Leagues come live from the org's Front9 league list. */
+  const leagues = await fetchLeagues();
+  const STATS = stats(leagues.length);
+
   return (
     <>
       {/* ------------------------------------------------------------------ */}
@@ -65,8 +71,8 @@ export default function Home() {
             Leagues &amp; <span className="text-sdgc-red">Tournaments</span>
           </h1>
           <p className="mt-6 max-w-xl text-[15px] leading-[1.9] text-white/75 sm:text-[16px]">
-            Eight leagues running across seven nights, plus a full tournament calendar. Pick your
-            night, pick your format, and keep your swing sharp straight through the winter.
+            League play through the week, plus a full tournament calendar. Pick your night, pick
+            your format, and keep your swing sharp straight through the winter.
           </p>
 
           <div className="mt-9 flex flex-wrap items-center gap-4">
@@ -120,11 +126,23 @@ export default function Home() {
             intro="Every league runs on our simulators with live scoring, weekly standings, and full season handicapping. Click any league for schedules, standings, and registration."
           />
 
-          <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
-            {LEAGUES.map((league) => (
-              <LeagueCard key={league.slug} league={league} />
-            ))}
-          </div>
+          {leagues.length > 0 ? (
+            <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+              {leagues.map((league) => (
+                <LeagueCard key={league.slug} league={league} />
+              ))}
+            </div>
+          ) : (
+            <div className="mt-14 rounded-sm border border-dashed border-black/20 bg-[#fafafa] px-8 py-16 text-center">
+              <h3 className="font-display text-[22px] font-bold tracking-[0.05em] text-sdgc-ink uppercase">
+                No Leagues Running Right Now
+              </h3>
+              <p className="mx-auto mt-3 max-w-lg text-[14px] leading-[1.8] text-sdgc-body">
+                Next season&rsquo;s schedule is being set. Call the shop and we&rsquo;ll put you on
+                the list for the next league that opens.
+              </p>
+            </div>
+          )}
 
         </div>
       </section>
@@ -213,7 +231,7 @@ export default function Home() {
                   options={{
                     preset: "featured-sidebar",
                     posts: "15",
-                    link: "http://localhost:3000/blog?id={slug}",
+                    link: "http://localhost:3001/blog?id={slug}",
                   }}
                 />
               </div>
@@ -234,7 +252,7 @@ export default function Home() {
                     tags: "tournaments",
                     actions: "1",
                     accent: "#e11414",
-                    link: "http://localhost:3000/event?id={slug}",
+                    link: "http://localhost:3001/event?id={slug}",
                   }}
                 />
               </div>

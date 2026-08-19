@@ -11,8 +11,6 @@ function ArrowIcon() {
 }
 
 export default function LeagueCard({ league }: { league: League }) {
-  const full = league.spotsOpen === 0;
-
   return (
     <Link
       href={`/league/${league.slug}`}
@@ -39,7 +37,7 @@ export default function LeagueCard({ league }: { league: League }) {
             {league.name}
           </h3>
           <p className="mt-1.5 flex min-h-[2.8em] items-start font-sans text-[12px] leading-[1.4] font-semibold tracking-wide text-sdgc-red uppercase">
-            {league.day} &middot; {league.time}
+            {league.day} &middot; {league.entryLabel}
           </p>
         </div>
       </div>
@@ -65,10 +63,10 @@ export default function LeagueCard({ league }: { league: League }) {
       <div className="flex items-center justify-between border-t border-black/10 bg-[#fafafa] px-6 py-3.5">
         <span
           className={`font-sans text-[11px] font-bold tracking-[0.12em] uppercase ${
-            full ? "text-black/40" : "text-sdgc-red"
+            league.full || league.status !== "open" ? "text-black/40" : "text-sdgc-red"
           }`}
         >
-          {full ? `Full · ${league.teams} teams` : `${league.spotsOpen} spots open`}
+          {league.statusLabel}
         </span>
         <span className="flex items-center gap-1.5 font-sans text-[12px] font-bold tracking-wide text-sdgc-ink uppercase transition-colors duration-300 group-hover:text-sdgc-red">
           View
