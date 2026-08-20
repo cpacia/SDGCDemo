@@ -87,7 +87,9 @@ export default function RankingsPage() {
       <section className="bg-[#f4f4f4] py-16 sm:py-20">
         <div className="mx-auto grid w-[85%] max-w-[1180px] grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
           <div className="overflow-hidden rounded-sm border border-black/10 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
-            <div className="flex flex-wrap items-end justify-between gap-3 border-b border-black/10 px-6 py-5 sm:px-8">
+            {/* Painted above the widget (and opaque) so the rule under it survives
+                the negative margin that tucks the widget's blank top edge under. */}
+            <div className="relative z-10 flex flex-wrap items-end justify-between gap-3 border-b border-black/10 bg-white px-6 py-5 sm:px-8">
               <div>
                 <h2 className="font-display text-[24px] leading-none font-bold tracking-[0.05em] text-sdgc-ink uppercase">
                   Current Ranking
@@ -100,7 +102,7 @@ export default function RankingsPage() {
                 Powered by Front9
               </span>
             </div>
-            <div className="p-2 sm:p-4">
+            <div className="-mt-4 px-2 pb-2 sm:px-4 sm:pb-4">
               <Front9Embed
                 org={RANKINGS.org}
                 widget="standings"

@@ -3,14 +3,25 @@ import Link from "next/link";
 import Front9Embed from "@/components/Front9Embed";
 import LeagueCard from "@/components/LeagueCard";
 import SectionHeading from "@/components/SectionHeading";
-import { fetchLeagues } from "@/lib/leagues";
+import { fetchLeagues, type League } from "@/lib/leagues";
 import { RANKING_FACTS } from "@/lib/rankings";
 
-function stats(leagueCount: number) {
+function stats(leagues: League[]) {
+  // "Active" excludes the finished leagues still inside their grace month — a
+  // season that ended three weeks ago shouldn't be counted as running.
+  const active = leagues.filter((league) => league.stage !== "finished");
+  const players = active.reduce((total, league) => total + league.members, 0);
+
   return [
-    { value: String(leagueCount), label: leagueCount === 1 ? "Active League" : "Active Leagues" },
-    { value: "140+", label: "Registered Players" },
-    { value: "6", label: "Simulator Bays" },
+    { value: String(active.length), label: active.length === 1 ? "Active League" : "Active Leagues" },
+    {
+      // Sum of the league rosters. Falls back to the standing marketing figure
+      // when nobody has registered yet (or Front9 is unreachable), because "0
+      // Registered Players" reads as broken rather than as new.
+      value: players > 0 ? String(players) : "140+",
+      label: "Registered Players",
+    },
+    { value: "7", label: "Simulator Bays" },
     { value: "365", label: "Days a Year" },
   ];
 }
@@ -44,7 +55,7 @@ function PanelHeader({ title, subtitle }: { title: string; subtitle: string }) {
 export default async function Home() {
   /* Leagues come live from the org's Front9 league list. */
   const leagues = await fetchLeagues();
-  const STATS = stats(leagues.length);
+  const STATS = stats(leagues);
 
   return (
     <>

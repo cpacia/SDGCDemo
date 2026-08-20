@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Front9Embed from "@/components/Front9Embed";
+import { startLeagueRegistration } from "./actions";
 import { fetchLeague, fetchLeagues, type League } from "@/lib/leagues";
 import { CONTACT } from "@/lib/nav";
 
@@ -24,10 +25,19 @@ export async function generateMetadata({ params }: PageProps<"/league/[slug]">):
 
 /** The header CTA reads back the league's registration state. */
 function registerLabel(league: League): string {
-  if (league.status === "completed") return "Season Complete";
-  if (league.status === "active") return "Season Underway — Ask About Next Season";
-  if (league.full) return "League Full — Join Waitlist";
-  return league.spotsOpen === null ? "Register Now" : `Register — ${league.spotsOpen} Spots Open`;
+  switch (league.stage) {
+    case "finished":
+      return "Season Complete";
+    case "playing":
+      return "Season Underway — Ask About Next Season";
+    case "upcoming":
+      return `Registration ${league.statusLabel}`;
+    case "closed":
+      return "Registration Closed";
+    case "registering":
+      if (league.full) return "League Full — Join Waitlist";
+      return league.spotsOpen === null ? "Register Now" : `Register — ${league.spotsOpen} Spots Open`;
+  }
 }
 
 function ArrowLeftIcon() {
@@ -74,9 +84,9 @@ export default async function LeaguePage({ params }: PageProps<"/league/[slug]">
   const league = await fetchLeague(slug);
   if (!league) notFound();
 
-  const closed = league.full || league.status !== "open";
+  const closed = league.stage !== "registering" || league.full;
   const facts = [
-    { label: "Plays", value: league.day },
+    { label: "Plays", value: league.schedule },
     { label: "Format", value: league.format },
     { label: "Season", value: league.season },
     { label: "Entry", value: league.entryLabel },
@@ -136,17 +146,32 @@ export default async function LeaguePage({ params }: PageProps<"/league/[slug]">
           </div>
 
           <div className="mt-10 flex flex-wrap items-center gap-4">
-            <a
-              href={CONTACT.bookNow}
-              className={`rounded-full px-8 py-3 font-sans text-[13px] font-bold tracking-[2px] uppercase transition-colors duration-300 ${
-                closed
-                  ? "cursor-not-allowed bg-white/15 text-white/50"
-                  : "bg-sdgc-red text-white hover:bg-[#c62222]"
-              }`}
-              aria-disabled={closed}
-            >
-              {registerLabel(league)}
-            </a>
+            {/* Only a league taking sign-ups has somewhere to send you. The rest
+                — season underway, registration not open yet, season over — are
+                statements of fact, so they render as text rather than a link
+                that would drop you on a booking page you can't use. The phone
+                button beside them is the way to ask about the next season. */}
+            {league.stage === "registering" ? (
+              // A form, not a link: the hosted registration URL is minted per
+              // sign-up by the API, so the button posts and is redirected on.
+              <form action={startLeagueRegistration}>
+                <input type="hidden" name="slug" value={league.slug} />
+                <button
+                  type="submit"
+                  className={`cursor-pointer rounded-full px-8 py-3 font-sans text-[13px] font-bold tracking-[2px] uppercase transition-colors duration-300 ${
+                    closed
+                      ? "bg-white/15 text-white/50"
+                      : "bg-sdgc-red text-white hover:bg-[#c62222]"
+                  }`}
+                >
+                  {registerLabel(league)}
+                </button>
+              </form>
+            ) : (
+              <span className="cursor-default rounded-full bg-white/15 px-8 py-3 font-sans text-[13px] font-bold tracking-[2px] text-white/50 uppercase">
+                {registerLabel(league)}
+              </span>
+            )}
             <a
               href={CONTACT.phoneHref}
               className="rounded-full border-2 border-white/35 px-8 py-3 font-sans text-[13px] font-bold tracking-[2px] text-white uppercase transition-colors duration-300 hover:border-white hover:bg-white/10"

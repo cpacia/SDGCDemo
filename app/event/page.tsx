@@ -1,11 +1,24 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import EventTabs from "@/components/EventTabs";
+import { fetchEvent } from "@/lib/events";
 
-export const metadata: Metadata = {
-  title: "Event | Seth Dichard Golf Centers",
-  description: "Details, field, tee times, leaderboard, and odds for the event.",
-};
+/** The `?id=` the Front9 widgets link with is the event's slug. */
+async function slugFrom(searchParams: PageProps<"/event">["searchParams"]) {
+  const { id } = await searchParams;
+  return (Array.isArray(id) ? id[0] : id) ?? "";
+}
+
+export async function generateMetadata({
+  searchParams,
+}: PageProps<"/event">): Promise<Metadata> {
+  const event = await fetchEvent(await slugFrom(searchParams));
+
+  return {
+    title: `${event?.title ?? "Event"} | Seth Dichard Golf Centers`,
+    description: "Details, field, tee times, leaderboard, and odds for the event.",
+  };
+}
 
 function ArrowLeftIcon() {
   return (
@@ -16,9 +29,9 @@ function ArrowLeftIcon() {
 }
 
 /**
- * Front9 slugs are derived from the event title and prefixed with the season
- * year ("2026-the-turkey-day-shootout"), so this reads back cleanly enough for
- * the page heading. The widgets carry the authoritative title.
+ * Last resort for the heading when Front9 has no event under this slug. Front9
+ * slugs are derived from the title and prefixed with the season year
+ * ("2026-the-turkey-day-shootout"), so it reads back close to the real thing.
  */
 function titleFromSlug(slug?: string) {
   if (!slug) return "Event";
@@ -33,8 +46,10 @@ function titleFromSlug(slug?: string) {
 }
 
 export default async function EventPage({ searchParams }: PageProps<"/event">) {
-  const { id } = await searchParams;
-  const eventId = Array.isArray(id) ? id[0] : id;
+  const eventId = await slugFrom(searchParams);
+  // The same fetch backs generateMetadata; identical requests are deduped
+  // within a render, so the title costs one round trip, not two.
+  const event = await fetchEvent(eventId);
 
   return (
     <>
@@ -51,7 +66,7 @@ export default async function EventPage({ searchParams }: PageProps<"/event">) {
             Seth Dichard Golf Centers
           </p>
           <h1 className="mt-3 max-w-4xl font-display text-[32px] leading-[1.08] font-bold tracking-[0.05em] text-white uppercase sm:text-[44px]">
-            {titleFromSlug(eventId)}
+            {event?.title ?? titleFromSlug(eventId)}
           </h1>
         </div>
       </section>
