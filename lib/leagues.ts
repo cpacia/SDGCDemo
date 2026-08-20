@@ -9,6 +9,7 @@
  * active or completed — drafts and private leagues never reach us.
  */
 
+import { accentFromImage } from "./accent";
 import { FRONT9_API, FRONT9_ORG, publicURL, REVALIDATE_SECONDS } from "./front9";
 
 export { FRONT9_ORG };
@@ -16,7 +17,11 @@ export { FRONT9_ORG };
 /** A finished league stays on the site for one month past its end date. */
 const GRACE_MONTHS = 1;
 
-/** Fallback crest colour — the API carries no per-league accent. */
+/**
+ * Crest colour used when a league's logo has none to read — the stock "photo
+ * coming soon" placeholder is pure greyscale, and so is any crest an org draws
+ * in black and white.
+ */
 const DEFAULT_ACCENT = "#e02b2b";
 
 export type EventSeriesStatus = "draft" | "open" | "active" | "completed" | "canceled";
@@ -118,10 +123,12 @@ export async function fetchLeagues(): Promise<League[]> {
   }
 
   const now = new Date();
-  return list
+  const leagues = list
     .filter((series) => isStillShowing(series, now))
     .sort(byRunningFirst)
     .map(toLeague);
+
+  return withAccents(leagues);
 }
 
 /** One league by slug, or null if Front9 doesn't have it (or is private). */
@@ -131,7 +138,8 @@ export async function fetchLeague(slug: string): Promise<League | null> {
     const res = await fetch(url, { next: { revalidate: REVALIDATE_SECONDS } });
     if (res.status === 404) return null;
     if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-    return toLeague((await res.json()) as EventSeriesDTO);
+    const [league] = await withAccents([toLeague((await res.json()) as EventSeriesDTO)]);
+    return league;
   } catch (err) {
     console.error(`Front9: could not load league "${slug}" —`, err);
     return null;
@@ -157,6 +165,25 @@ export async function startRegistration(seriesID: number): Promise<string | null
     console.error(`Front9: could not start registration for league ${seriesID} —`, err);
     return null;
   }
+}
+
+/**
+ * Colours each league from its own crest.
+ *
+ * The original design gave every league its own colour, keyed to its logo. The
+ * API has no field for it, but the crest is the source that mattered, so it's
+ * read back out of the image rather than kept in a table that would go stale the
+ * moment an org uploads a new logo. Crests are fetched in parallel and the
+ * result is memoised per URL, so this costs one round trip per new logo.
+ */
+async function withAccents(leagues: League[]): Promise<League[]> {
+  return Promise.all(
+    leagues.map(async (league) => {
+      if (!league.logo) return league;
+      const accent = await accentFromImage(league.logo);
+      return accent ? { ...league, accent } : league;
+    }),
+  );
 }
 
 /**
