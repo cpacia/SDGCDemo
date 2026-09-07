@@ -105,12 +105,14 @@ function sdgc_front9_shortcode_leagues() {
 
 				<div class="sdgc-panels">
 					<?php
-					echo sdgc_front9_panel_open( 'From the Blog', 'News, recaps, and tips from our staff' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo sdgc_front9_panel_open( 'From the Blog', 'News, recaps, and tips from our staff', 'sdgc-panel--inset' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					echo sdgc_front9_embed( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 						'blog-feed',
 						array(
 							'preset' => 'featured-sidebar',
 							'posts'  => '15',
+							// Without this the cards render but nothing is clickable.
+							'link'   => sdgc_front9_link_template( 'blog_page', 'id' ),
 						)
 					);
 					echo sdgc_front9_panel_close(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

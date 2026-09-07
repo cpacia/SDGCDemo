@@ -65,8 +65,31 @@ function sdgc_front9_still_showing( $series, $today ) {
 	}
 
 	// Through the end of the last day, not its midnight.
-	$cutoff = $end->modify( '+' . SDGC_FRONT9_GRACE_MONTHS . ' month' )->modify( '+1 day' );
+	$cutoff = sdgc_front9_add_months( $end, SDGC_FRONT9_GRACE_MONTHS )->modify( '+1 day' );
 	return $today < $cutoff;
+}
+
+/**
+ * Adds whole months, clamped to the last day of the target month.
+ *
+ * PHP's own `+1 month` overflows when the target month is shorter — Jan 31
+ * lands on Mar 3, which would keep a league up three days longer than it should
+ * be. Clamping to Feb 28 instead matches the prototype and keeps the grace
+ * period a month for every league, whenever its season happens to end.
+ *
+ * @param DateTimeImmutable $date   Starting date.
+ * @param int               $months Whole months to add.
+ * @return DateTimeImmutable
+ */
+function sdgc_front9_add_months( $date, $months ) {
+	$target = $date->modify( '+' . (int) $months . ' month' );
+
+	// A changed day-of-month is the tell that PHP rolled into the next month.
+	if ( $target->format( 'j' ) !== $date->format( 'j' ) ) {
+		$target = $target->modify( 'last day of previous month' );
+	}
+
+	return $target;
 }
 
 /**

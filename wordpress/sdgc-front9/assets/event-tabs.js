@@ -25,7 +25,12 @@
 
 	/** Builds the Front9 embed tag a panel describes. */
 	function mount(panel) {
-		if (panel.getAttribute("data-mounted") === "1") {
+		// The first panel's embed is printed server-side, so a panel can already
+		// hold one before this ever runs. Read that off the DOM rather than
+		// trusting the flag alone — otherwise the opening show() mounts a second
+		// copy of the first tab's widget underneath the one already there.
+		if (panel.getAttribute("data-mounted") === "1" || panel.querySelector(".sdgc-embed")) {
+			panel.setAttribute("data-mounted", "1");
 			return;
 		}
 		panel.setAttribute("data-mounted", "1");

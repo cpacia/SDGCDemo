@@ -20,7 +20,16 @@
 
 	font-family: var(--sdgc-serif);
 	color: var(--sdgc-body);
-	line-height: 1.7;
+	/*
+	 * The client site's Divi base is Open Sans 14/1.7, and the prototype pins
+	 * the same. `em` rather than a unitless ratio is deliberate: it resolves
+	 * here and is inherited as a fixed 23.8px, so small caps-tracked text
+	 * (eyebrows, stat captions, buttons) keeps the prototype's leading instead
+	 * of recomputing against its own font size. Pinned rather than inherited so
+	 * the pages don't take the host theme's base size.
+	 */
+	font-size: 14px;
+	line-height: 1.7em;
 	-webkit-font-smoothing: antialiased;
 }
 
@@ -30,22 +39,32 @@
 	box-sizing: border-box;
 }
 
-.sdgc h1,
-.sdgc h2,
-.sdgc h3,
-.sdgc p,
-.sdgc dl,
-.sdgc dd,
-.sdgc dt,
-.sdgc ol,
-.sdgc ul,
-.sdgc figure {
+/*
+ * Host themes commonly paint a focus ring on plain `:focus`, which fires on a
+ * mouse click as well as a keypress — Twenty Twenty-Five ships
+ * `:where(.wp-site-blocks :focus) { outline: 2px solid }`, which draws a box
+ * around an event tab the moment it's clicked.
+ *
+ * Suppressed for pointer focus only. Keyboard focus still matches
+ * `:focus-visible`, so `:not()` excludes it here and whatever ring the theme
+ * provides is left alone — this costs keyboard users nothing.
+ */
+.sdgc :focus:not(:focus-visible) {
+	outline: none;
+}
+
+/*
+ * Strip the theme's element margins. Wrapped in :where() so the whole rule
+ * carries the specificity of `.sdgc` alone — a bare element selector here
+ * (`.sdgc h1`) would outrank every single-class component rule below it and
+ * silently flatten their margins and padding.
+ */
+.sdgc :where(h1, h2, h3, p, dl, dd, dt, ol, ul, figure) {
 	margin: 0;
 	padding: 0;
 }
 
-.sdgc ol,
-.sdgc ul {
+.sdgc :where(ol, ul) {
 	list-style: none;
 }
 
@@ -113,18 +132,35 @@
 	border-bottom: 5px solid var(--sdgc-red);
 }
 
+/*
+ * Each scrim is two layers: a flat black, then the directional gradient over it.
+ *
+ * The flat black stands in for the opacity the prototype puts on the photo
+ * itself. Here the photo is a CSS background on the section, so it can't carry
+ * its own opacity — fading the element would fade the text with it. Compositing
+ * is equivalent either way: a photo at 45% over black is the same result as the
+ * full photo under black at 55%, so each background-color below is 1 minus the
+ * prototype's image opacity. Without it the photo reads at full strength and
+ * the panels sitting on top lose their contrast.
+ */
 .sdgc-hero__scrim {
 	position: absolute;
 	inset: 0;
-	background: linear-gradient(115deg, rgba(0, 0, 0, 0.94) 0%, rgba(0, 0, 0, 0.78) 50%, rgba(0, 0, 0, 0.45) 100%);
+	/* Prototype: photo at 30%. */
+	background-color: rgba(0, 0, 0, 0.7);
+	background-image: linear-gradient(115deg, rgba(0, 0, 0, 0.94) 0%, rgba(0, 0, 0, 0.78) 50%, rgba(0, 0, 0, 0.45) 100%);
 }
 
 .sdgc-hero__scrim--light {
-	background: linear-gradient(115deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.7) 45%, rgba(0, 0, 0, 0.35) 100%);
+	/* Prototype: photo at 45%. */
+	background-color: rgba(0, 0, 0, 0.55);
+	background-image: linear-gradient(115deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.7) 45%, rgba(0, 0, 0, 0.35) 100%);
 }
 
 .sdgc-hero__scrim--heavy {
-	background: linear-gradient(115deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.82) 55%, rgba(0, 0, 0, 0.5) 100%);
+	/* Prototype: photo at 20%. */
+	background-color: rgba(0, 0, 0, 0.8);
+	background-image: linear-gradient(115deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.82) 55%, rgba(0, 0, 0, 0.5) 100%);
 }
 
 .sdgc-hero__inner {
@@ -145,6 +181,23 @@
 	}
 	.sdgc-hero--tall .sdgc-hero__inner {
 		padding: 112px 0;
+	}
+}
+
+@media (min-width: 1024px) {
+	.sdgc-hero--tall .sdgc-hero__inner {
+		padding: 128px 0;
+	}
+}
+
+/* The event hero carries a title and a date line, so it sits tighter. */
+.sdgc-hero--compact .sdgc-hero__inner {
+	padding: 48px 0;
+}
+
+@media (min-width: 640px) {
+	.sdgc-hero--compact .sdgc-hero__inner {
+		padding: 64px 0;
 	}
 }
 
@@ -200,10 +253,16 @@
 
 .sdgc-hero__lede {
 	margin-top: 24px;
-	max-width: 620px;
+	max-width: 576px;
 	font-size: 15px;
 	line-height: 1.9;
 	color: rgba(255, 255, 255, 0.75);
+}
+
+@media (min-width: 640px) {
+	.sdgc-hero__lede {
+		font-size: 16px;
+	}
 }
 
 .sdgc-hero__actions {
@@ -253,7 +312,6 @@
 	font-weight: 700;
 	letter-spacing: 2px;
 	text-transform: uppercase;
-	line-height: 1.4;
 	transition: background-color 0.3s, border-color 0.3s, color 0.3s;
 }
 
@@ -835,6 +893,16 @@
 	.sdgc-panel__body {
 		padding: 0 16px 16px;
 	}
+}
+
+/*
+ * The blog feed starts its content flush against its own top edge, where the
+ * schedule and standings widgets carry space of their own. The body's -16px
+ * tuck then leaves it sitting right on the header rule. This puts the
+ * difference back so it lines up with the widgets beside it.
+ */
+.sdgc-panel--inset .sdgc-panel__body {
+	padding-top: 16px;
 }
 
 /* embed.js injects a full-width iframe that self-reports its height. */

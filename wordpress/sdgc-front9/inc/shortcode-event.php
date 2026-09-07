@@ -69,7 +69,7 @@ function sdgc_front9_shortcode_event( $atts ) {
 	ob_start();
 	?>
 	<div class="sdgc">
-		<section class="sdgc-hero sdgc-hero--flat">
+		<section class="sdgc-hero sdgc-hero--flat sdgc-hero--compact">
 			<div class="sdgc-hero__inner">
 				<?php echo sdgc_front9_back_link( sdgc_front9_page_url( 'leagues_page' ) . '#schedule', 'All Events' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				<p class="sdgc-hero__eyebrow sdgc-hero__eyebrow--spaced">Seth Dichard Golf Centers</p>

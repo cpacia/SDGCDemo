@@ -129,10 +129,13 @@ function sdgc_front9_section_heading( $eyebrow, $title, $intro = '' ) {
  *
  * @param string $title    Panel title.
  * @param string $subtitle Line under it.
+ * @param string $modifier Optional extra class on the panel, e.g. 'sdgc-panel--inset'.
  * @return string
  */
-function sdgc_front9_panel_open( $title, $subtitle ) {
-	$html  = '<div class="sdgc-panel">';
+function sdgc_front9_panel_open( $title, $subtitle, $modifier = '' ) {
+	$classes = 'sdgc-panel' . ( '' !== $modifier ? ' ' . $modifier : '' );
+
+	$html  = '<div class="' . esc_attr( $classes ) . '">';
 	$html .= '<div class="sdgc-panel__header">';
 	$html .= '<div>';
 	$html .= '<h3 class="sdgc-panel__title">' . esc_html( $title ) . '</h3>';

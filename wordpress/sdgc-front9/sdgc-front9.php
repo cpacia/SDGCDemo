@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: SDGC Leagues & Rankings (Front9)
- * Description: The leagues, league, event and rankings pages, driven live by the Front9 public API. Four shortcodes, no header or footer — the theme keeps those.
+ * Description: The leagues, league, event, rankings and blog pages, driven live by the Front9 public API. Five shortcodes, no header or footer — the theme keeps those.
  * Version:     1.0.0
  * Author:      Seth Dichard Golf Centers
  * License:     GPL-2.0-or-later
@@ -23,6 +23,7 @@ require_once SDGC_FRONT9_PATH . 'inc/shortcode-leagues.php';
 require_once SDGC_FRONT9_PATH . 'inc/shortcode-league.php';
 require_once SDGC_FRONT9_PATH . 'inc/shortcode-event.php';
 require_once SDGC_FRONT9_PATH . 'inc/shortcode-rankings.php';
+require_once SDGC_FRONT9_PATH . 'inc/shortcode-blog.php';
 require_once SDGC_FRONT9_PATH . 'inc/register.php';
 
 /**
@@ -57,6 +58,7 @@ function sdgc_front9_options() {
 				'league_page'   => '/league/',
 				'event_page'    => '/event/',
 				'rankings_page' => '/rankings/',
+				'blog_page'     => '/blog/',
 
 				// The facility-wide ranking's standings series id.
 				'rankings_series' => '14',

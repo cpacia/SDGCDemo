@@ -1,8 +1,8 @@
 # SDGC Leagues & Rankings — WordPress build
 
-The four pages from the Next.js prototype, rebuilt as a WordPress plugin: the
-**leagues home page**, a **league page**, an **event page**, and the
-**indoor golf rankings page**.
+The five pages from the Next.js prototype, rebuilt as a WordPress plugin: the
+**leagues home page**, a **league page**, an **event page**, the
+**indoor golf rankings page**, and a **blog post page**.
 
 Only the page bodies are here. Header, footer, nav and the site chrome all stay
 with the theme — each page is a normal WordPress page with one shortcode in it.
@@ -16,7 +16,7 @@ league appears on the site the moment it's published, with no edits here.
 
 1. Copy `sdgc-front9/` into `wp-content/plugins/` on the site.
 2. **Plugins → Installed Plugins → SDGC Leagues & Rankings (Front9) → Activate.**
-3. Create four pages and put one shortcode in each (a Shortcode block, or plain
+3. Create five pages and put one shortcode in each (a Shortcode block, or plain
    text in the Classic editor):
 
    | Page | Suggested slug | Shortcode |
@@ -25,6 +25,7 @@ league appears on the site the moment it's published, with no edits here.
    | League | `/league/` | `[sdgc_league]` |
    | Event | `/event/` | `[sdgc_event]` |
    | Indoor Golf Rankings | `/rankings/` | `[sdgc_rankings]` |
+   | Blog | `/blog/` | `[sdgc_blog]` |
 
 4. If you used different slugs, tell the plugin where the pages are — see
    **Configuration** below. The league cards and the schedule widget link to
@@ -34,20 +35,24 @@ Give each page a full-width, no-sidebar template if the theme has one. The pages
 manage their own width (85%, maxing out at 1180px) and expect to sit in a full
 bleed container.
 
-### The League and Event pages are single, reusable pages
+### The League, Event and Blog pages are single, reusable pages
 
-They aren't one page per league. The League page reads `?league=<slug>` and the
-Event page reads `?event=<slug>`, which is what the cards and widgets link with:
+They aren't one page per league. The League page reads `?league=<slug>`, the
+Event page reads `?event=<slug>` and the Blog page reads `?id=<slug>` — which is
+what the cards and widgets link with:
 
 ```
 /league/?league=thursday-night-family-friends-league
 /event/?event=2026-the-turkey-day-shootout
+/blog/?id=derek-roy-and-ainsley-roy-capture-victory-in-our-first-family-scramble
 ```
 
-To pin one league to its own permanent page instead, pass the slug directly:
+To pin one league or post to its own permanent page instead, pass the slug
+directly:
 
 ```
 [sdgc_league slug="thursday-night-family-friends-league"]
+[sdgc_blog slug="derek-roy-and-ainsley-roy-capture-victory-in-our-first-family-scramble"]
 ```
 
 ---
@@ -64,6 +69,7 @@ add_filter( 'sdgc_front9_options', function ( $options ) {
 	$options['league_page']   = '/indoor-golf-leagues/league/';
 	$options['event_page']    = '/indoor-golf-leagues/event/';
 	$options['rankings_page'] = '/indoor-golf-rankings/';
+	$options['blog_page']     = '/blog/';
 
 	// Hero photo — a media-library URL is fine.
 	$options['hero_image']    = 'https://sethdichardgolf.com/wp-content/uploads/hero.jpg';
@@ -125,6 +131,11 @@ linkable: `/event/?event=<slug>#leaderboard`.
 **`[sdgc_rankings]`** — the facility-wide standings table with the "how it works"
 rules alongside.
 
+**`[sdgc_blog]`** — one blog post, read from `?id=<slug>`. The blog feed on the
+leagues page links here, so the two have to agree: the feed's links are built
+from `blog_page`, and the widget on this page takes the slug straight off the
+URL. Nothing here fetches the post itself.
+
 ---
 
 ## How the data works
@@ -167,6 +178,10 @@ where to put the iframe. Exclude `front9.com/embed.js` from combining/deferring.
 **The cards link to the wrong page.** The `league_page` and `event_page` options
 don't match where the pages actually live — see Configuration.
 
+**Blog posts aren't clickable.** The feed only links anywhere if it's given a
+link template, which is built from `blog_page`. If that option points at a page
+that doesn't exist, the posts still render but lead nowhere.
+
 **A league is missing.** The API only publishes leagues that are open, active or
 completed; drafts and private leagues never leave Front9. A league that ended more
 than a month ago is dropped on purpose.
@@ -198,6 +213,7 @@ sdgc-front9/
     shortcode-league.php       [sdgc_league]
     shortcode-event.php        [sdgc_event]
     shortcode-rankings.php     [sdgc_rankings]
+    shortcode-blog.php         [sdgc_blog]
   assets/
     sdgc-front9.css            All styling, scoped under .sdgc
     event-tabs.js              Event page tab switching + lazy widget loading
