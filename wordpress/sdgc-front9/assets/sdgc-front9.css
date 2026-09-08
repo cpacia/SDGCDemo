@@ -59,12 +59,31 @@
  * (`.sdgc h1`) would outrank every single-class component rule below it and
  * silently flatten their margins and padding.
  */
-.sdgc :where(h1, h2, h3, p, dl, dd, dt, ol, ul, figure) {
+.sdgc :where(h1, h2, h3, p, dl, dd, dt, figure) {
 	margin: 0;
 	padding: 0;
 }
 
-.sdgc :where(ol, ul) {
+/*
+ * Lists are reset at full specificity, unlike the block above, because themes
+ * style them harder than anything else on the page. Divi ships
+ *
+ *     #left-area ul, .entry-content ul, .et-l--body ul { list-style-type: disc;
+ *         padding: 0 0 23px 1em; line-height: 26px }
+ *
+ * at (0,1,1). A `:where()` reset scores (0,1,0) and loses to that outright,
+ * which is how bullets and a stray 14px under the event tabs reached
+ * production. Matching (0,1,1) wins on source order, since this sheet is
+ * enqueued after the theme's.
+ *
+ * The two components that own a list — the event tabs and the ranking rules —
+ * are scoped `.sdgc .sdgc-*` below so they outrank this and the theme both.
+ */
+.sdgc ol,
+.sdgc ul,
+.sdgc li {
+	margin: 0;
+	padding: 0;
 	list-style: none;
 }
 
@@ -1054,19 +1073,35 @@
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
-.sdgc-tabs__list {
+.sdgc .sdgc-tabs__list {
 	width: 85%;
 	max-width: 1180px;
 	margin: 0 auto;
+	padding: 0;
 	display: flex;
 	gap: 4px;
 	overflow-x: auto;
+	/* Pinned so a theme's list line-height can't resize the strip. */
+	line-height: 1.7em;
 }
 
 @media (min-width: 640px) {
-	.sdgc-tabs__list {
+	.sdgc .sdgc-tabs__list {
 		gap: 8px;
 	}
+}
+
+/*
+ * `display: flex` rather than the default `list-item`: an element only paints a
+ * marker while it is a list item, so this removes the possibility rather than
+ * overriding it, and it lets the link stretch to the row's full height so the
+ * active underline stays on the bottom edge whatever padding a theme adds.
+ */
+.sdgc .sdgc-tabs__list > li {
+	display: flex;
+	margin: 0;
+	padding: 0;
+	list-style: none;
 }
 
 .sdgc-tabs__link {
@@ -1170,8 +1205,10 @@
 	background: var(--sdgc-red);
 }
 
-.sdgc-rules__list {
+.sdgc .sdgc-rules__list {
 	margin-top: 24px;
+	padding: 0;
+	list-style: none;
 }
 
 .sdgc-rules__item {
