@@ -125,7 +125,7 @@ export async function fetchLeagues(): Promise<League[]> {
   const now = new Date();
   const leagues = list
     .filter((series) => isStillShowing(series, now))
-    .sort(byRunningFirst)
+    .sort(byRunningFirst(now))
     .map(toLeague);
 
   return withAccents(leagues);
@@ -200,12 +200,19 @@ function isStillShowing(series: EventSeriesDTO, now: Date): boolean {
 /**
  * Running and upcoming leagues first, in the order they start; then the ones
  * playing out their grace month, most recently finished first.
+ *
+ * "Finished" is the stage the card itself shows, not the raw status: an org
+ * routinely leaves a league "open" past its last night, and reading the status
+ * alone sorted that season by its start date — which floated the oldest, most
+ * finished league to the very top of the list.
  */
-function byRunningFirst(a: EventSeriesDTO, b: EventSeriesDTO): number {
-  const done = (s: EventSeriesDTO) => (s.status === "completed" ? 1 : 0);
-  if (done(a) !== done(b)) return done(a) - done(b);
-  if (done(a)) return (b.endDate ?? "").localeCompare(a.endDate ?? "");
-  return (a.startDate ?? "").localeCompare(b.startDate ?? "");
+function byRunningFirst(now: Date) {
+  return (a: EventSeriesDTO, b: EventSeriesDTO): number => {
+    const done = (s: EventSeriesDTO) => (stageOf(s, now) === "finished" ? 1 : 0);
+    if (done(a) !== done(b)) return done(a) - done(b);
+    if (done(a)) return (b.endDate ?? "").localeCompare(a.endDate ?? "");
+    return (a.startDate ?? "").localeCompare(b.startDate ?? "");
+  };
 }
 
 /* -------------------------------------------------------------------------- */

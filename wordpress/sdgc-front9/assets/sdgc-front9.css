@@ -182,16 +182,21 @@
 	background-image: linear-gradient(115deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.82) 55%, rgba(0, 0, 0, 0.5) 100%);
 }
 
+/*
+ * The extra top padding is mobile only: the theme's header is fixed, and below
+ * 640px it sits close enough to the hero to clip the back link at the top of
+ * the block. Every breakpoint above resets the shorthand to an even padding.
+ */
 .sdgc-hero__inner {
 	position: relative;
 	width: 85%;
 	max-width: 1180px;
 	margin: 0 auto;
-	padding: 56px 0;
+	padding: 88px 0 56px;
 }
 
 .sdgc-hero--tall .sdgc-hero__inner {
-	padding: 80px 0;
+	padding: 112px 0 80px;
 }
 
 @media (min-width: 640px) {
@@ -211,7 +216,7 @@
 
 /* The event hero carries a title and a date line, so it sits tighter. */
 .sdgc-hero--compact .sdgc-hero__inner {
-	padding: 48px 0;
+	padding: 80px 0 48px;
 }
 
 @media (min-width: 640px) {

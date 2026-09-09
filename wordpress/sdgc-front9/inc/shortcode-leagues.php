@@ -180,8 +180,8 @@ function sdgc_front9_league_stats( $leagues ) {
 				'value' => '7',
 			),
 			array(
-				'label' => 'Days a Year',
-				'value' => '365',
+				'label' => 'Days a Week',
+				'value' => '5',
 			),
 		),
 		$leagues

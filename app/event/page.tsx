@@ -54,7 +54,7 @@ export default async function EventPage({ searchParams }: PageProps<"/event">) {
   return (
     <>
       <section className="relative isolate overflow-hidden border-b-[5px] border-sdgc-red bg-black">
-        <div className="mx-auto w-[85%] max-w-[1180px] py-12 sm:py-16">
+        <div className="mx-auto w-[85%] max-w-[1180px] pt-20 pb-12 sm:py-16">
           <Link
             href="/#schedule"
             className="inline-flex items-center gap-2 font-sans text-[12px] font-semibold tracking-[0.16em] text-white/60 uppercase transition-colors duration-300 hover:text-white"

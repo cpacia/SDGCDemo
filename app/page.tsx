@@ -22,7 +22,7 @@ function stats(leagues: League[]) {
       label: "Registered Players",
     },
     { value: "7", label: "Simulator Bays" },
-    { value: "365", label: "Days a Year" },
+    { value: "5", label: "Days a Week" },
   ];
 }
 
@@ -76,7 +76,7 @@ export default async function Home() {
           className="absolute inset-0 bg-[linear-gradient(115deg,rgba(0,0,0,0.92)_0%,rgba(0,0,0,0.7)_45%,rgba(0,0,0,0.35)_100%)]"
         />
 
-        <div className="relative mx-auto w-[85%] max-w-[1180px] py-20 sm:py-28 lg:py-32">
+        <div className="relative mx-auto w-[85%] max-w-[1180px] pt-28 pb-20 sm:py-28 lg:py-32">
           <p className="font-sans text-[12px] font-semibold tracking-[0.3em] text-sdgc-red uppercase">
             Hudson, NH &middot; Indoor Golf, Year Round
           </p>

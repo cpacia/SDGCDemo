@@ -38,7 +38,7 @@ export default function RankingsPage() {
           className="absolute inset-0 bg-[linear-gradient(115deg,rgba(0,0,0,0.94)_0%,rgba(0,0,0,0.78)_50%,rgba(0,0,0,0.45)_100%)]"
         />
 
-        <div className="relative mx-auto w-[85%] max-w-[1180px] py-14 sm:py-20">
+        <div className="relative mx-auto w-[85%] max-w-[1180px] pt-22 pb-14 sm:py-20">
           <Link
             href="/"
             className="inline-flex items-center gap-2 font-sans text-[12px] font-semibold tracking-[0.16em] text-white/60 uppercase transition-colors duration-300 hover:text-white"

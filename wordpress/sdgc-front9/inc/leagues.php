@@ -34,7 +34,12 @@ function sdgc_front9_leagues() {
 		$rows[] = $series;
 	}
 
-	usort( $rows, 'sdgc_front9_compare_leagues' );
+	usort(
+		$rows,
+		static function ( $a, $b ) use ( $today ) {
+			return sdgc_front9_compare_leagues( $a, $b, $today );
+		}
+	);
 
 	return array_map( 'sdgc_front9_league_view', $rows );
 }
@@ -96,13 +101,19 @@ function sdgc_front9_add_months( $date, $months ) {
  * Running and upcoming leagues first, in the order they start; then the ones
  * playing out their grace month, most recently finished first.
  *
- * @param array $a Raw payload.
- * @param array $b Raw payload.
+ * "Finished" is the stage the card itself shows, not the raw status: an org
+ * routinely leaves a league 'open' past its last night, and reading the status
+ * alone sorted that season by its start date — which floated the oldest, most
+ * finished league to the very top of the list.
+ *
+ * @param array             $a     Raw payload.
+ * @param array             $b     Raw payload.
+ * @param DateTimeImmutable $today Today at UTC midnight.
  * @return int
  */
-function sdgc_front9_compare_leagues( $a, $b ) {
-	$done_a = ( isset( $a['status'] ) && 'completed' === $a['status'] ) ? 1 : 0;
-	$done_b = ( isset( $b['status'] ) && 'completed' === $b['status'] ) ? 1 : 0;
+function sdgc_front9_compare_leagues( $a, $b, $today ) {
+	$done_a = ( 'finished' === sdgc_front9_stage( $a, $today ) ) ? 1 : 0;
+	$done_b = ( 'finished' === sdgc_front9_stage( $b, $today ) ) ? 1 : 0;
 
 	if ( $done_a !== $done_b ) {
 		return $done_a - $done_b;

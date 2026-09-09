@@ -2,8 +2,8 @@
  * Generates the league crest SVGs in public/leagues/.
  *
  * One shared crest template (black roundel, accent ring, arced lockup text,
- * centre motif) so the eight league cards read as a single badge family rather
- * than eight unrelated logos. Run: node scripts/generate-league-logos.mjs
+ * centre motif) so the sixteen league cards read as a single badge family rather
+ * than sixteen unrelated logos. Run: node scripts/generate-league-logos.mjs
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
@@ -55,6 +55,79 @@ const MOTIFS = {
     <circle cx="136" cy="114" r="24" fill="none" stroke="ACCENT" stroke-width="7"/>
     <path d="M96 154h48" stroke="ACCENT" stroke-width="6" stroke-linecap="round"/>
     <circle cx="121" cy="76" r="8" fill="#ffffff"/>`,
+  leaf: `
+    <path d="M120 74c-30 18-34 50 0 72z" fill="#ffffff"/>
+    <path d="M120 74c30 18 34 50 0 72z" fill="ACCENT"/>
+    <path d="M120 74v72" stroke="#0b0b0b" stroke-width="2.5"/>
+    <g stroke-linecap="round" stroke-width="2.5" fill="none">
+      <path d="M120 100l-17-6M120 122l-16 2" stroke="ACCENT"/>
+      <path d="M120 100l17-6M120 122l16 2" stroke="#ffffff"/>
+    </g>
+    <path d="M120 146v12" stroke="ACCENT" stroke-width="5" stroke-linecap="round"/>
+    <ellipse cx="120" cy="162" rx="22" ry="4" fill="#ffffff" opacity=".35"/>`,
+  twilight: `
+    <path d="M90 134a30 30 0 0 1 60 0z" fill="ACCENT"/>
+    <path d="M74 134h92" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+    <path d="M84 148h30M126 148h30" stroke="ACCENT" stroke-width="4" stroke-linecap="round" opacity=".5"/>
+    <g fill="#ffffff" opacity=".85">
+      <path d="M94 74l3.5 8 8 3.5-8 3.5-3.5 8-3.5-8-8-3.5 8-3.5z"/>
+      <path d="M148 90l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/>
+      <circle cx="122" cy="66" r="3.5"/>
+    </g>`,
+  moon: `
+    <mask id="moonCut">
+      <rect width="240" height="240" fill="#ffffff"/>
+      <circle cx="140" cy="100" r="34" fill="#000000"/>
+    </mask>
+    <circle cx="118" cy="112" r="40" fill="ACCENT" mask="url(#moonCut)"/>
+    <path d="M152 136l3 8 8 3-8 3-3 8-3-8-8-3 8-3z" fill="#ffffff" opacity=".9"/>
+    <circle cx="90" cy="74" r="3.5" fill="#ffffff" opacity=".7"/>
+    <path d="M98 156h44" stroke="#ffffff" stroke-width="6" stroke-linecap="round" opacity=".4"/>`,
+  floodlight: `
+    <path d="M102 104L74 154h92l-28-50z" fill="#ffffff" opacity=".12"/>
+    <path d="M112 104l-10 50M128 104l10 50" stroke="#ffffff" stroke-width="2" opacity=".22"/>
+    <path d="M120 84V62" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+    <path d="M94 84h52l-8 20h-36z" fill="ACCENT"/>
+    <g fill="#0b0b0b" opacity=".5">
+      <circle cx="110" cy="94" r="3.5"/><circle cx="120" cy="94" r="3.5"/><circle cx="130" cy="94" r="3.5"/>
+    </g>
+    <circle cx="120" cy="142" r="11" fill="#ffffff"/>
+    <ellipse cx="120" cy="158" rx="26" ry="5" fill="ACCENT" opacity=".45"/>`,
+  bloom: `
+    <g fill="ACCENT">
+      <circle cx="120" cy="74" r="13"/><circle cx="101" cy="88" r="13"/>
+      <circle cx="108" cy="110" r="13"/><circle cx="132" cy="110" r="13"/><circle cx="139" cy="88" r="13"/>
+    </g>
+    <circle cx="120" cy="94" r="11" fill="#ffffff"/>
+    <path d="M120 106v42" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+    <path d="M120 130c-15 0-22-8-24-17 13-2 22 5 24 17z" fill="ACCENT" opacity=".75"/>
+    <ellipse cx="120" cy="156" rx="24" ry="5" fill="#ffffff" opacity=".35"/>`,
+  sunbeam: `
+    <circle cx="120" cy="104" r="24" fill="ACCENT"/>
+    <g stroke="ACCENT" stroke-width="5" stroke-linecap="round" opacity=".7">
+      <path d="M120 62v12M80 104h12M148 104h12M92 76l9 9M148 76l-9 9M92 132l9-9M148 132l-9-9"/>
+    </g>
+    <path d="M76 152h88" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+    <path d="M90 163h60" stroke="#ffffff" stroke-width="4" stroke-linecap="round" opacity=".4"/>`,
+  umbrella: `
+    <path d="M120 122L72 122A48 48 0 0 1 86.1 88.1Z" fill="ACCENT"/>
+    <path d="M120 122L86.1 88.1A48 48 0 0 1 120 74Z" fill="#ffffff"/>
+    <path d="M120 122L120 74A48 48 0 0 1 153.9 88.1Z" fill="ACCENT"/>
+    <path d="M120 122L153.9 88.1A48 48 0 0 1 168 122Z" fill="#ffffff"/>
+    <path d="M72 122h96" stroke="#0b0b0b" stroke-width="2" opacity=".45"/>
+    <path d="M120 122v28a10 10 0 0 0 20 0" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="120" cy="70" r="4.5" fill="#ffffff"/>`,
+  wedge: `
+    <path d="M154 60l-16 56" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+    <path d="M154 62l-5 16" stroke="ACCENT" stroke-width="11" stroke-linecap="round"/>
+    <g transform="rotate(-10 122 132)">
+      <path d="M100 150a7 7 0 0 1-7-8l3-14c2-9 9-15 18-15h24a7 7 0 0 1 7 7v23a7 7 0 0 1-7 7z" fill="ACCENT"/>
+      <g stroke="#0b0b0b" stroke-width="2.5" opacity=".35" stroke-linecap="round">
+        <path d="M108 126h30M104 134h34M102 142h36"/>
+      </g>
+    </g>
+    <circle cx="74" cy="142" r="10" fill="#ffffff"/>
+    <path d="M62 160h100" stroke="#ffffff" stroke-width="4" stroke-linecap="round" opacity=".3"/>`,
   star: `
     <path d="M120 74l12 26 28 4-20 20 5 28-25-14-25 14 5-28-20-20 28-4z" fill="ACCENT"/>
     <path d="M96 156h48" stroke="#ffffff" stroke-width="6" stroke-linecap="round" opacity=".5"/>`,
@@ -99,10 +172,18 @@ const LEAGUES = [
   { file: "tuesday-mixed-doubles", top: "MIXED DOUBLES", bottom: "TUESDAY LEAGUE", motif: "clubs", accent: "#7cda24" },
   { file: "wednesday-senior", top: "SENIOR CIRCUIT", bottom: "WEDNESDAY AM", motif: "sunrise", accent: "#f0a726" },
   { file: "thursday-couples", top: "COUPLES LEAGUE", bottom: "THURSDAY NIGHT", motif: "pair", accent: "#e02b2b" },
+  { file: "thursday-fall-mixed", top: "FALL MIXED", bottom: "THURSDAY NIGHT", motif: "leaf", accent: "#e2622a" },
   { file: "ladies-league", top: "LADIES LEAGUE", bottom: "TUESDAY NIGHT", motif: "tee", accent: "#d84f9c" },
   { file: "junior-development", top: "JUNIOR TOUR", bottom: "SATURDAY AM", motif: "star", accent: "#3aa0e0" },
   { file: "friday-skins", top: "SKINS GAME", bottom: "FRIDAY NIGHT", motif: "ball", accent: "#c9a227" },
   { file: "corporate-league", top: "CORPORATE CUP", bottom: "SDGC HUDSON NH", motif: "trophy", accent: "#8e6bd6" },
+  { file: "monday-twilight", top: "TWILIGHT LEAGUE", bottom: "MONDAY PM", motif: "twilight", accent: "#b45cf0" },
+  { file: "monday-night", top: "NIGHT LEAGUE", bottom: "MONDAY NIGHT", motif: "moon", accent: "#4f6bf0" },
+  { file: "tuesday-night", top: "NIGHT LEAGUE", bottom: "TUESDAY NIGHT", motif: "floodlight", accent: "#24c1b5" },
+  { file: "tuesday-morning-ladies", top: "LADIES LEAGUE", bottom: "TUESDAY AM", motif: "bloom", accent: "#ef5a8c" },
+  { file: "wednesday-morning", top: "MORNING LEAGUE", bottom: "WEDNESDAY AM", motif: "sunbeam", accent: "#3fbf7f" },
+  { file: "wednesday-afternoon", top: "AFTERNOON LEAGUE", bottom: "WEDNESDAY PM", motif: "umbrella", accent: "#ff6f4a" },
+  { file: "wednesday-night", top: "NIGHT LEAGUE", bottom: "WEDNESDAY NIGHT", motif: "wedge", accent: "#5ad1f0" },
 ];
 
 mkdirSync(OUT, { recursive: true });
