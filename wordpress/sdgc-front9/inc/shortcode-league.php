@@ -110,6 +110,21 @@ function sdgc_front9_shortcode_league( $atts ) {
 
 		<section class="sdgc-section sdgc-section--grey">
 			<div class="sdgc-wrap">
+				<?php
+				// Only when this league actually has a seat to fill — an empty "Subs
+				// Needed" block on every league page would be noise.
+				$subs = sdgc_front9_sub_requests( $league );
+				if ( ! empty( $subs ) ) :
+					?>
+					<div class="sdgc-subs-panel" id="subs">
+						<div class="sdgc-subs-panel__header">
+							<h2 class="sdgc-panel__title">Subs Needed</h2>
+							<p class="sdgc-panel__subtitle">Take a regular's seat for one night — no season commitment</p>
+						</div>
+						<?php echo sdgc_front9_sub_list( $subs, false ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					</div>
+				<?php endif; ?>
+
 				<?php if ( $league['has_schedule'] || $league['has_standings'] ) : ?>
 					<div class="sdgc-panels">
 						<?php

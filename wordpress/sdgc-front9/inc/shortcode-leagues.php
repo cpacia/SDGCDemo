@@ -2,8 +2,8 @@
 /**
  * [sdgc_leagues] — the leagues home page.
  *
- * Hero, a strip of figures, the league grid, the rankings promo, and the blog +
- * tournament widgets.
+ * Hero, a strip of figures, the league grid, any open sub requests, the
+ * rankings promo, and the blog + tournament widgets.
  *
  * @package SDGC_Front9
  */
@@ -66,6 +66,8 @@ function sdgc_front9_shortcode_leagues() {
 				<?php endif; ?>
 			</div>
 		</section>
+
+		<?php echo sdgc_front9_subs_section( sdgc_front9_sub_requests() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 
 		<section class="sdgc-promo"<?php echo sdgc_front9_hero_style(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 			<div class="sdgc-hero__scrim sdgc-hero__scrim--heavy"></div>

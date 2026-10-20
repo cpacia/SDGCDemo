@@ -76,8 +76,8 @@
  * production. Matching (0,1,1) wins on source order, since this sheet is
  * enqueued after the theme's.
  *
- * The two components that own a list — the event tabs and the ranking rules —
- * are scoped `.sdgc .sdgc-*` below so they outrank this and the theme both.
+ * The components that own a list — the event tabs, the ranking rules and the
+ * sub list — are scoped `.sdgc .sdgc-*` below so they outrank this and the theme both.
  */
 .sdgc ol,
 .sdgc ul,
@@ -1255,4 +1255,212 @@
 	font-size: 13.5px;
 	line-height: 1.7;
 	color: var(--sdgc-body);
+}
+
+/* ---------------------------------------------------------------------------
+   Subs needed
+   --------------------------------------------------------------------------- */
+
+.sdgc-subs-wrap {
+	margin: 56px auto 0;
+	max-width: 960px;
+}
+
+/* On a league page: its own card above the schedule and standings. */
+.sdgc-subs-panel {
+	border: 1px solid var(--sdgc-line);
+	border-radius: 2px;
+	background: #ffffff;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+	padding: 20px 16px 16px;
+}
+
+@media (min-width: 640px) {
+	.sdgc-subs-panel {
+		padding: 24px 32px 32px;
+	}
+}
+
+.sdgc-subs-panel__header {
+	margin-bottom: 20px;
+}
+
+.sdgc-subs-panel + .sdgc-panels,
+.sdgc-subs-panel + .sdgc-empty {
+	margin-top: 32px;
+}
+
+.sdgc-subs__notice {
+	margin-bottom: 16px;
+	border-left: 4px solid var(--sdgc-red);
+	background: #ffffff;
+	padding: 12px 16px;
+	font-size: 14px;
+	color: var(--sdgc-ink);
+}
+
+.sdgc .sdgc-subs {
+	display: grid;
+	gap: 12px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.sdgc .sdgc-sub {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	gap: 16px;
+	align-items: center;
+	margin: 0;
+	padding: 16px;
+	border: 1px solid var(--sdgc-line);
+	border-left: 4px solid var(--sdgc-red);
+	border-radius: 2px;
+	background: #ffffff;
+}
+
+@media (min-width: 640px) {
+	.sdgc .sdgc-sub {
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		gap: 24px;
+		padding: 20px 24px;
+	}
+}
+
+.sdgc-sub__date {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	min-width: 56px;
+	font-family: var(--sdgc-sans);
+	line-height: 1;
+	text-transform: uppercase;
+	color: var(--sdgc-ink);
+}
+
+.sdgc-sub__weekday,
+.sdgc-sub__month {
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.14em;
+	color: rgba(0, 0, 0, 0.45);
+}
+
+.sdgc-sub__day {
+	margin: 6px 0;
+	font-family: var(--sdgc-display);
+	font-size: 30px;
+	font-weight: 700;
+}
+
+.sdgc-sub__league {
+	margin: 0 0 4px;
+	font-family: var(--sdgc-sans);
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.sdgc-sub__league a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.sdgc-sub__league a:hover {
+	text-decoration: underline;
+}
+
+.sdgc-sub__title {
+	margin: 0;
+	font-family: var(--sdgc-display);
+	font-size: 20px;
+	line-height: 1.2;
+	font-weight: 600;
+	letter-spacing: 0.03em;
+	text-transform: uppercase;
+	color: var(--sdgc-ink);
+}
+
+.sdgc-sub__meta {
+	margin: 4px 0 0;
+	font-size: 13px;
+	color: var(--sdgc-body);
+}
+
+.sdgc-sub__meta:empty {
+	display: none;
+}
+
+.sdgc-sub__note {
+	margin: 8px 0 0;
+	font-size: 13px;
+	font-style: italic;
+	color: var(--sdgc-body);
+}
+
+/* Below the details on a phone; its own column from 640px. */
+.sdgc-sub__action {
+	grid-column: 1 / -1;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding-top: 12px;
+	border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+@media (min-width: 640px) {
+	.sdgc-sub__action {
+		grid-column: auto;
+		flex-direction: column;
+		align-items: flex-end;
+		padding-top: 0;
+		border-top: 0;
+	}
+}
+
+.sdgc-sub__terms {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin: 0;
+	font-family: var(--sdgc-sans);
+}
+
+.sdgc-sub__fee {
+	font-size: 16px;
+	font-weight: 700;
+	color: var(--sdgc-ink);
+}
+
+.sdgc-sub__fee.is-free {
+	color: var(--sdgc-red);
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	font-size: 13px;
+}
+
+.sdgc-sub__tag {
+	border-radius: 999px;
+	background: #000000;
+	padding: 3px 10px;
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: #ffffff;
+}
+
+.sdgc-btn--small {
+	padding: 10px 22px;
+	font-size: 11.5px;
+	white-space: nowrap;
+}
+
+/* Keeps the button on the right when the terms push it onto its own line. */
+.sdgc-sub__action .sdgc-register {
+	margin-left: auto;
 }

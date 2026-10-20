@@ -26,6 +26,7 @@ league appears on the site the moment it's published, with no edits here.
    | Event | `/event/` | `[sdgc_event]` |
    | Indoor Golf Rankings | `/rankings/` | `[sdgc_rankings]` |
    | Blog | `/blog/` | `[sdgc_blog]` |
+| Subs Needed *(optional)* | `/subs/` | `[sdgc_subs]` |
 
 4. If you used different slugs, tell the plugin where the pages are — see
    **Configuration** below. The league cards and the schedule widget link to
@@ -131,10 +132,42 @@ linkable: `/event/?event=<slug>#leaderboard`.
 **`[sdgc_rankings]`** — the facility-wide standings table with the "how it works"
 rules alongside.
 
+**`[sdgc_subs]`** — every open sub request across the org, with an empty state
+when there are none. Optional: the same list already appears on the leagues page
+and league pages whenever there's something on it. See **Sub requests** below.
+
 **`[sdgc_blog]`** — one blog post, read from `?id=<slug>`. The blog feed on the
 leagues page links here, so the two have to agree: the feed's links are built
 from `blog_page`, and the widget on this page takes the slug straight off the
 URL. Nothing here fetches the post itself.
+
+---
+
+## Sub requests
+
+When a regular can't make a night, a league admin posts their seat as a sub
+request in Front9. Open requests show up as a **Subs Needed** list:
+
+- **Leagues page** — every league's requests, in their own section between the
+  league cards and the rankings promo. The section only appears while at least
+  one request is open.
+- **League page** — that league's requests, above the schedule and standings.
+  Also only when there's one open.
+- **`[sdgc_subs]`** — the org-wide list on a page of its own, if you want one to
+  link to.
+
+Each row shows the night, the league (linked), the team the sub plays for, the
+first tee time once the tee sheet has one, the admin's note, the fee (or Free),
+and a Members Only tag where it applies. The regular who's out is never named —
+the API doesn't send it.
+
+**Sign Up to Sub** works like the Register button: it posts to the site, which
+looks the request up, asks the API for a hosted registration URL with
+`subRequest=<id>`, and redirects there. Front9 signs the golfer in (or has them
+create an account), takes the fee, and puts them in the seat. If the request is
+gone by the time they click — filled, withdrawn, or the night started — they're
+sent back to the list with a "that spot has just been filled" note, and the
+cached list is dropped so the dead row doesn't come back.
 
 ---
 
@@ -208,12 +241,14 @@ sdgc-front9/
     accent.php                 Reads each league's colour out of its crest
     leagues.php                League view model: stage, labels, spots, dates
     render.php                 Shared markup: heroes, headings, panels, embeds
-    register.php               Register button handler (POST → hosted redirect)
+    register.php               Register + Sign Up to Sub handlers (POST → hosted redirect)
+    subs.php                   Sub request view model and the Subs Needed list
     shortcode-leagues.php      [sdgc_leagues]
     shortcode-league.php       [sdgc_league]
     shortcode-event.php        [sdgc_event]
     shortcode-rankings.php     [sdgc_rankings]
     shortcode-blog.php         [sdgc_blog]
+    shortcode-subs.php         [sdgc_subs], and the section the leagues page reuses
   assets/
     sdgc-front9.css            All styling, scoped under .sdgc
     event-tabs.js              Event page tab switching + lazy widget loading

@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: SDGC Leagues & Rankings (Front9)
- * Description: The leagues, league, event, rankings and blog pages, driven live by the Front9 public API. Five shortcodes, no header or footer — the theme keeps those.
- * Version:     1.0.0
+ * Description: The leagues, league, event, rankings, blog and subs-needed pages, driven live by the Front9 public API. Six shortcodes, no header or footer — the theme keeps those.
+ * Version:     1.1.0
  * Author:      Seth Dichard Golf Centers
  * License:     GPL-2.0-or-later
  *
@@ -11,7 +11,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SDGC_FRONT9_VERSION', '1.0.0' );
+define( 'SDGC_FRONT9_VERSION', '1.1.0' );
 define( 'SDGC_FRONT9_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SDGC_FRONT9_URL', plugin_dir_url( __FILE__ ) );
 
@@ -19,11 +19,13 @@ require_once SDGC_FRONT9_PATH . 'inc/api.php';
 require_once SDGC_FRONT9_PATH . 'inc/accent.php';
 require_once SDGC_FRONT9_PATH . 'inc/leagues.php';
 require_once SDGC_FRONT9_PATH . 'inc/render.php';
+require_once SDGC_FRONT9_PATH . 'inc/subs.php';
 require_once SDGC_FRONT9_PATH . 'inc/shortcode-leagues.php';
 require_once SDGC_FRONT9_PATH . 'inc/shortcode-league.php';
 require_once SDGC_FRONT9_PATH . 'inc/shortcode-event.php';
 require_once SDGC_FRONT9_PATH . 'inc/shortcode-rankings.php';
 require_once SDGC_FRONT9_PATH . 'inc/shortcode-blog.php';
+require_once SDGC_FRONT9_PATH . 'inc/shortcode-subs.php';
 require_once SDGC_FRONT9_PATH . 'inc/register.php';
 
 /**

@@ -73,6 +73,15 @@ function sdgc_front9_get( $path ) {
 }
 
 /**
+ * Drops one cached response, for when we know it has gone stale.
+ *
+ * @param string $path Path under the org base, as passed to sdgc_front9_get().
+ */
+function sdgc_front9_forget( $path ) {
+	delete_transient( 'sdgc_f9_' . md5( sdgc_front9_api_base() . $path ) );
+}
+
+/**
  * The org's leagues, newest-relevant first. Draft and private ones never reach
  * us — the API omits them.
  *
@@ -111,17 +120,52 @@ function sdgc_front9_get_event( $slug ) {
 }
 
 /**
+ * Open sub requests: every league's, or one league's by slug. Filled and
+ * withdrawn requests, and nights that have started, never reach us.
+ *
+ * @param string $league_slug League slug, or '' for the whole org.
+ * @return array<int, array>
+ */
+function sdgc_front9_get_sub_requests( $league_slug = '' ) {
+	$path = '' !== $league_slug
+		? '/event-series/' . rawurlencode( $league_slug ) . '/sub-requests'
+		: '/sub-requests';
+
+	$data = sdgc_front9_get( $path );
+	return is_array( $data ) ? $data : array();
+}
+
+/**
+ * One open sub request by id, or null once it's filled, withdrawn or past.
+ *
+ * @param int $id Sub request id.
+ * @return array|null
+ */
+function sdgc_front9_get_sub_request( $id ) {
+	if ( $id <= 0 ) {
+		return null;
+	}
+	return sdgc_front9_get( '/sub-requests/' . (int) $id );
+}
+
+/**
  * Starts a league registration and returns the hosted URL to send the golfer to.
  *
  * Payment never flows through this API: the POST mints a URL on Front9's own
  * registration host, which is where the golfer picks a partner and pays. Never
  * cached — the response is per sign-up.
  *
- * @param int $series_id League (event series) id.
+ * @param int                   $series_id League (event series) id.
+ * @param array<string, string> $args      Extra query args, e.g. `subRequest`
+ *                                         to take one sub request instead of
+ *                                         joining for the season.
  * @return string|null
  */
-function sdgc_front9_start_registration( $series_id ) {
+function sdgc_front9_start_registration( $series_id, $args = array() ) {
 	$url = sdgc_front9_api_base() . '/event-series/' . (int) $series_id . '/register/start';
+	if ( ! empty( $args ) ) {
+		$url = add_query_arg( array_map( 'rawurlencode', $args ), $url );
+	}
 
 	$response = wp_remote_post(
 		$url,

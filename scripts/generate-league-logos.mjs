@@ -2,8 +2,8 @@
  * Generates the league crest SVGs in public/leagues/.
  *
  * One shared crest template (black roundel, accent ring, arced lockup text,
- * centre motif) so the sixteen league cards read as a single badge family rather
- * than sixteen unrelated logos. Run: node scripts/generate-league-logos.mjs
+ * centre motif) so the nineteen league cards read as a single badge family rather
+ * than nineteen unrelated logos. Run: node scripts/generate-league-logos.mjs
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
@@ -128,6 +128,47 @@ const MOTIFS = {
     </g>
     <circle cx="74" cy="142" r="10" fill="#ffffff"/>
     <path d="M62 160h100" stroke="#ffffff" stroke-width="4" stroke-linecap="round" opacity=".3"/>`,
+  comet: `
+    <path d="M153.2 106.2L126.8 81.8L74 156z" fill="ACCENT" opacity=".3"/>
+    <path d="M147.1 100.5L132.9 87.5L90 140z" fill="ACCENT"/>
+    <circle cx="140" cy="94" r="18" fill="#ffffff"/>
+    <g fill="#0b0b0b" opacity=".28">
+      <circle cx="134" cy="88" r="2.4"/><circle cx="143" cy="86" r="2.4"/><circle cx="148" cy="94" r="2.4"/>
+      <circle cx="138" cy="97" r="2.4"/><circle cx="145" cy="103" r="2.4"/><circle cx="132" cy="102" r="2.4"/>
+    </g>
+    <g fill="#ffffff" opacity=".85">
+      <path d="M92 76l3.5 8 8 3.5-8 3.5-3.5 8-3.5-8-8-3.5 8-3.5z"/>
+      <path d="M160 136l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/>
+      <circle cx="116" cy="64" r="3.5"/>
+    </g>`,
+  fireworks: `
+    <path d="M116 81V65M129 88.5l13.8-8M129 103.5l13.8 8M116 111v16M103 103.5l-13.8 8M103 88.5l-13.8-8" stroke="ACCENT" stroke-width="5" stroke-linecap="round"/>
+    <path d="M123.5 83l4.5-7.8M131 96h9M123.5 109l4.5 7.8M108.5 109l-4.5 7.8M101 96h-9M108.5 83l-4.5-7.8" stroke="ACCENT" stroke-width="4" stroke-linecap="round" opacity=".55"/>
+    <g fill="#ffffff" opacity=".7">
+      <circle cx="116" cy="59" r="2.8"/><circle cx="148" cy="77.5" r="2.8"/><circle cx="148" cy="114.5" r="2.8"/>
+      <circle cx="84" cy="114.5" r="2.8"/><circle cx="84" cy="77.5" r="2.8"/>
+    </g>
+    <circle cx="116" cy="96" r="10" fill="#ffffff"/>
+    <g fill="#0b0b0b" opacity=".28">
+      <circle cx="112" cy="92" r="1.8"/><circle cx="119" cy="91" r="1.8"/><circle cx="120" cy="98" r="1.8"/><circle cx="113" cy="100" r="1.8"/>
+    </g>
+    <path transform="translate(5 7)" d="M160.6 131.9l5.6 2.3M157.9 134.6l2.3 5.6M154.1 134.6l-2.3 5.6M151.4 131.9l-5.6 2.3M151.4 128.1l-5.6-2.3M154.1 125.4l-2.3-5.6M157.9 125.4l2.3-5.6M160.6 128.1l5.6-2.3" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity=".85"/>
+    <path d="M100 154q8-12 14-22" fill="none" stroke="ACCENT" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="0 7" opacity=".7"/>
+    <path d="M84 160h72" stroke="#ffffff" stroke-width="5" stroke-linecap="round" opacity=".4"/>`,
+  mug: `
+    <g stroke="#ffffff" stroke-width="4" stroke-linecap="round" fill="none" opacity=".6">
+      <path d="M105 94c-6-7 6-11 0-18s6-11 0-16"/>
+      <path d="M117 94c-6-7 6-11 0-18s6-11 0-16"/>
+      <path d="M129 94c-6-7 6-11 0-18s6-11 0-16"/>
+    </g>
+    <path d="M140 110h6a10 10 0 0 1 0 20h-6" stroke="ACCENT" stroke-width="6" fill="none"/>
+    <path d="M94 102h46v30a16 16 0 0 1-16 16h-14a16 16 0 0 1-16-16z" fill="ACCENT"/>
+    <circle cx="117" cy="122" r="10" fill="#ffffff"/>
+    <g fill="#0b0b0b" opacity=".28">
+      <circle cx="113" cy="118" r="1.8"/><circle cx="120" cy="117" r="1.8"/><circle cx="121" cy="124" r="1.8"/><circle cx="114" cy="126" r="1.8"/>
+    </g>
+    <path d="M84 156h68" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+    <ellipse cx="118" cy="164" rx="24" ry="4" fill="ACCENT" opacity=".4"/>`,
   star: `
     <path d="M120 74l12 26 28 4-20 20 5 28-25-14-25 14 5-28-20-20 28-4z" fill="ACCENT"/>
     <path d="M96 156h48" stroke="#ffffff" stroke-width="6" stroke-linecap="round" opacity=".5"/>`,
@@ -184,6 +225,9 @@ const LEAGUES = [
   { file: "wednesday-morning", top: "MORNING LEAGUE", bottom: "WEDNESDAY AM", motif: "sunbeam", accent: "#3fbf7f" },
   { file: "wednesday-afternoon", top: "AFTERNOON LEAGUE", bottom: "WEDNESDAY PM", motif: "umbrella", accent: "#ff6f4a" },
   { file: "wednesday-night", top: "NIGHT LEAGUE", bottom: "WEDNESDAY NIGHT", motif: "wedge", accent: "#5ad1f0" },
+  { file: "thursday-night", top: "NIGHT LEAGUE", bottom: "THURSDAY NIGHT", motif: "comet", accent: "#f5d547" },
+  { file: "friday-night", top: "NIGHT LEAGUE", bottom: "FRIDAY NIGHT", motif: "fireworks", accent: "#e94fe0" },
+  { file: "sunday-morning", top: "MORNING LEAGUE", bottom: "SUNDAY AM", motif: "mug", accent: "#ff9b30" },
 ];
 
 mkdirSync(OUT, { recursive: true });
