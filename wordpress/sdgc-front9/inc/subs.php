@@ -83,10 +83,28 @@ function sdgc_front9_sub_request_view( $row, $accents ) {
 		'tee_time'     => $start ? wp_date( 'g:i A', $start ) : '',
 		'fee_label'    => sdgc_front9_fee_label( (int) ( $row['feeCents'] ?? 0 ) ),
 		'free'         => (int) ( $row['feeCents'] ?? 0 ) <= 0,
-		'members_only' => ! empty( $row['membersOnly'] ),
+		'eligibility'  => sdgc_front9_sub_eligibility_label( (string) ( $row['eligibility'] ?? '' ) ),
 		// Undated requests sort last.
 		'sort'         => ( $date ? $date->format( 'Y-m-d' ) : '9999-99-99' ) . ( $start ? gmdate( 'H:i', $start ) : '99:99' ),
 	);
+}
+
+/**
+ * The tag for who may take a request, or '' when anyone can. Omitted and
+ * unrecognised values read as everyone.
+ *
+ * @param string $eligibility `everyone`, `org_members` or `league_players`.
+ * @return string
+ */
+function sdgc_front9_sub_eligibility_label( $eligibility ) {
+	switch ( $eligibility ) {
+		case 'org_members':
+			return 'Members Only';
+		case 'league_players':
+			return 'League Players Only';
+		default:
+			return '';
+	}
 }
 
 /**
@@ -168,8 +186,8 @@ function sdgc_front9_sub_list( $requests, $show_league = true ) {
 				<div class="sdgc-sub__action">
 					<p class="sdgc-sub__terms">
 						<span class="sdgc-sub__fee<?php echo $request['free'] ? ' is-free' : ''; ?>"><?php echo esc_html( $request['fee_label'] ); ?></span>
-						<?php if ( $request['members_only'] ) : ?>
-							<span class="sdgc-sub__tag">Members Only</span>
+						<?php if ( '' !== $request['eligibility'] ) : ?>
+							<span class="sdgc-sub__tag"><?php echo esc_html( $request['eligibility'] ); ?></span>
 						<?php endif; ?>
 					</p>
 					<form class="sdgc-register" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">

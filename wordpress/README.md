@@ -158,7 +158,8 @@ request in Front9. Open requests show up as a **Subs Needed** list:
 
 Each row shows the night, the league (linked), the team the sub plays for, the
 first tee time once the tee sheet has one, the admin's note, the fee (or Free),
-and a Members Only tag where it applies. The regular who's out is never named —
+and a Members Only or League Players Only tag when the request isn't open to
+everyone. The regular who's out is never named —
 the API doesn't send it.
 
 **Sign Up to Sub** works like the Register button: it posts to the site, which
